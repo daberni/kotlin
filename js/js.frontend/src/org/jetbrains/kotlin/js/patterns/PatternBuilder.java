@@ -154,9 +154,9 @@ public final class PatternBuilder {
                     }
                     for (int i = 0; i < valueParameterDescriptors.size(); i++) {
                         ValueParameterDescriptor valueParameterDescriptor = valueParameterDescriptors.get(i);
-                        Name name = DescriptorUtilsKt.getNameIfStandardType(valueParameterDescriptor.getType());
+                        if (!DescriptorUtils.getFqName(valueParameterDescriptor).startsWith(KOTLIN_NAME)) return false;
                         NamePredicate namePredicate = argumentCheckers.get(i);
-                        if (!namePredicate.test(name)) return false;
+                        if (!namePredicate.test(valueParameterDescriptor.getName())) return false;
                     }
                 }
                 return true;
