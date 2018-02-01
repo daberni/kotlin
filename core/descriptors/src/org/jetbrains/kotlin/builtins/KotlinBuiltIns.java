@@ -966,6 +966,14 @@ public abstract class KotlinBuiltIns {
         return isConstructedFromGivenClass(type, FQ_NAMES._double);
     }
 
+    public static boolean isNumber(@NotNull KotlinType type) {
+        return isNumberOrNullableNumber(type) && !type.isMarkedNullable();
+    }
+
+    public static boolean isNumberOrNullableNumber(@NotNull KotlinType type) {
+        return isConstructedFromGivenClass(type, FQ_NAMES.number);
+    }
+
     private static boolean isConstructedFromGivenClassAndNotNullable(@NotNull KotlinType type, @NotNull FqNameUnsafe fqName) {
         return isConstructedFromGivenClass(type, fqName) && !type.isMarkedNullable();
     }

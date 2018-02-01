@@ -24,7 +24,6 @@ import org.jetbrains.kotlin.builtins.PrimitiveType;
 import org.jetbrains.kotlin.builtins.ReflectionTypes;
 import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.js.backend.ast.*;
-import org.jetbrains.kotlin.js.patterns.NamePredicate;
 import org.jetbrains.kotlin.js.translate.context.Namer;
 import org.jetbrains.kotlin.js.translate.context.TemporaryVariable;
 import org.jetbrains.kotlin.js.translate.context.TranslationContext;
@@ -219,29 +218,32 @@ public final class PatternTranslator extends AbstractTranslator {
 
     @Nullable
     private JsExpression getIsTypeCheckCallableForPrimitiveBuiltin(@NotNull KotlinType type) {
-        Name typeName = getNameIfStandardType(type);
-
-        if (NamePredicate.STRING.test(typeName)) {
+        if (KotlinBuiltIns.isString(type)) {
             return namer().isTypeOf(new JsStringLiteral("string"));
         }
 
-        if (NamePredicate.BOOLEAN.test(typeName)) {
+        if (KotlinBuiltIns.isBoolean(type)) {
             return namer().isTypeOf(new JsStringLiteral("boolean"));
         }
 
-        if (NamePredicate.LONG.test(typeName)) {
+        if (KotlinBuiltIns.isLong(type)) {
             return namer().isInstanceOf(Namer.kotlinLong());
         }
 
-        if (NamePredicate.NUMBER.test(typeName)) {
+        if (KotlinBuiltIns.isNumber(type)) {
             return namer().kotlin(Namer.IS_NUMBER);
         }
 
-        if (NamePredicate.CHAR.test(typeName)) {
+        if (KotlinBuiltIns.isChar(type)) {
             return namer().kotlin(Namer.IS_CHAR);
         }
 
-        if (NamePredicate.PRIMITIVE_NUMBERS_MAPPED_TO_PRIMITIVE_JS.test(typeName)) {
+        if (KotlinBuiltIns.isByte(type) ||
+            KotlinBuiltIns.isShort(type) ||
+            KotlinBuiltIns.isInt(type) ||
+            KotlinBuiltIns.isFloat(type) ||
+            KotlinBuiltIns.isDouble(type)
+        ) {
             return namer().isTypeOf(new JsStringLiteral("number"));
         }
 
